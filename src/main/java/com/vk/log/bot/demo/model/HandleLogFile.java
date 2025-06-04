@@ -1,24 +1,26 @@
 package com.vk.log.bot.demo.model;
-import com.vk.log.bot.demo.model.ReadLogFile;
 
-import java.io.FileNotFoundException;
+import java.util.Timer;
+import java.util.TimerTask;
 
 
 public class HandleLogFile {
 
 
-    public void handleStrings() throws FileNotFoundException {
-        int counter = 0;
-        for (int i = 0; i < ReadLogFile.getStrings().size(); i++) {
-            if (ReadLogFile.getStrings().get(i).contains("[ERROR]") ) {
-                System.out.println(ReadLogFile.getStrings().get(i) + "<----" + counter++);
-            }
+    public static void handleStrings(String line){
+        if (line.matches(".*ERROR.*")) {
+            System.out.println("Обнаружена ошибка: " + line);
         }
     }
 
-    public static void main(String[] args) throws FileNotFoundException {
-        HandleLogFile handleLogFile = new HandleLogFile();
-        handleLogFile.handleStrings();
+    public static void main(String[] args){
+        Timer timer = new Timer();
+        timer.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                ReadLogFile.getStrings();
+            }
+        }, 0, 2000);
     }
 
 }
